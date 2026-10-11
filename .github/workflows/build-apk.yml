@@ -23,11 +23,11 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Android SDK
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Install Android SDK packages
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKMANAGER" --licenses || true
+          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -45,3 +45,4 @@ jobs:
         with:
           name: OrbitDash-debug-APK
           path: source/OrbitDash/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
